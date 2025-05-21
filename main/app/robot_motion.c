@@ -1,4 +1,5 @@
 #include "robot_motion.h"
+#include "cliff_sensor.h"
 #include "driver/gpio.h"
 #include "driver/ledc.h"
 #include "esp_log.h"
@@ -29,6 +30,8 @@ static const char *TAG = "robot_motion";
 
 #define LEDC_FREQ     5000
 #define LEDC_RES_BITS LEDC_TIMER_8_BIT
+
+static bool robot_is_moving = false;
 
 static void set_motor(uint8_t in1_pin, uint8_t in2_pin, ledc_channel_t pwm_ch, int speed)
 {
@@ -84,14 +87,33 @@ void robot_motion_init(void)
     for (int i = 0; i < 4; i++) {
         ledc_channel_config(&ledc_channel[i]);
     }
+    
+    // Initialize cliff sensor
+    cliff_sensor_init();
+    
+    // Initially robot is not moving
+    robot_is_moving = false;
+    cliff_detection_enable(false);
+    
+    ESP_LOGI(TAG, "Robot motion system initialized");
 }
 
 void robot_move_forward(void)
 {
-    set_motor(A_IN1_PIN, A_IN2_PIN, A_LEDC_CH,  100);
-    set_motor(B_IN1_PIN, B_IN2_PIN, B_LEDC_CH,  100);
-    set_motor(C_IN1_PIN, C_IN2_PIN, C_LEDC_CH,  80);
-    set_motor(D_IN1_PIN, D_IN2_PIN, D_LEDC_CH,  80);
+    // Check if cliff is detected before moving
+    if (is_cliff_detected()) {
+        ESP_LOGW(TAG, "Cannot move forward - cliff detected!");
+        return;
+    }
+    
+    set_motor(A_IN1_PIN, A_IN2_PIN, A_LEDC_CH,  30);
+    set_motor(B_IN1_PIN, B_IN2_PIN, B_LEDC_CH,  30);
+    set_motor(C_IN1_PIN, C_IN2_PIN, C_LEDC_CH,  24);
+    set_motor(D_IN1_PIN, D_IN2_PIN, D_LEDC_CH,  24);
+    
+    robot_is_moving = true;
+    cliff_detection_enable(true);
+    ESP_LOGI(TAG, "Moving forward with cliff detection enabled");
 }
 
 void robot_move_backward(void)
@@ -100,6 +122,10 @@ void robot_move_backward(void)
     set_motor(B_IN1_PIN, B_IN2_PIN, B_LEDC_CH,  -100);
     set_motor(C_IN1_PIN, C_IN2_PIN, C_LEDC_CH,  -80);
     set_motor(D_IN1_PIN, D_IN2_PIN, D_LEDC_CH,  -80);
+    
+    robot_is_moving = true;
+    cliff_detection_enable(true);
+    ESP_LOGI(TAG, "Moving backward with cliff detection enabled");
 }
 
 void robot_turn_left(void)
@@ -108,6 +134,10 @@ void robot_turn_left(void)
     set_motor(B_IN1_PIN, B_IN2_PIN, B_LEDC_CH,  -50);
     set_motor(C_IN1_PIN, C_IN2_PIN, C_LEDC_CH,  50);
     set_motor(D_IN1_PIN, D_IN2_PIN, D_LEDC_CH,  50);
+    
+    robot_is_moving = true;
+    cliff_detection_enable(true);
+    ESP_LOGI(TAG, "Turning left with cliff detection enabled");
 }
 
 void robot_turn_right(void)
@@ -116,6 +146,10 @@ void robot_turn_right(void)
     set_motor(B_IN1_PIN, B_IN2_PIN, B_LEDC_CH,  50);
     set_motor(C_IN1_PIN, C_IN2_PIN, C_LEDC_CH,  -50);
     set_motor(D_IN1_PIN, D_IN2_PIN, D_LEDC_CH,  -50);
+    
+    robot_is_moving = true;
+    cliff_detection_enable(true);
+    ESP_LOGI(TAG, "Turning right with cliff detection enabled");
 }
 
 void robot_spin_around(void)
@@ -124,12 +158,27 @@ void robot_spin_around(void)
     set_motor(B_IN1_PIN, B_IN2_PIN, B_LEDC_CH,  100);
     set_motor(C_IN1_PIN, C_IN2_PIN, C_LEDC_CH,  -100);
     set_motor(D_IN1_PIN, D_IN2_PIN, D_LEDC_CH,  -100);
+    
+    robot_is_moving = true;
+    cliff_detection_enable(true);
+    ESP_LOGI(TAG, "Spinning around with cliff detection enabled");
 }
 
 void robot_stop(void)
 {
+    cliff_detection_enable(false);
+
     set_motor(A_IN1_PIN, A_IN2_PIN, A_LEDC_CH, 0);
     set_motor(B_IN1_PIN, B_IN2_PIN, B_LEDC_CH, 0);
     set_motor(C_IN1_PIN, C_IN2_PIN, C_LEDC_CH, 0);
     set_motor(D_IN1_PIN, D_IN2_PIN, D_LEDC_CH, 0);
+    
+    robot_is_moving = false;
+    cliff_detection_enable(false);
+    ESP_LOGI(TAG, "Robot stopped, cliff detection disabled");
+}
+
+bool robot_is_in_motion(void)
+{
+    return robot_is_moving;
 }

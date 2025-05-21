@@ -2,6 +2,8 @@
 #define ROBOT_MOTION_H
 
 #include <stdint.h>
+#include <stdbool.h>
+
 void robot_motion_init(void);  
 void robot_move_forward(void);
 void robot_move_backward(void);
@@ -9,5 +11,6 @@ void robot_turn_left(void);
 void robot_turn_right(void);
 void robot_spin_around(void);
 void robot_stop(void);
+bool robot_is_in_motion(void);
 
 #endif // ROBOT_MOTION_H

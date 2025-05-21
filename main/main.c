@@ -22,6 +22,7 @@
 #include "app_wifi.h"
 #include "settings.h"
 #include "robot_motion.h"
+#include "cliff_sensor.h"
 
 #define SCROLL_START_DELAY_S            (1.5)
 #define LISTEN_SPEAK_PANEL_DELAY_MS     2000
@@ -218,12 +219,12 @@ void app_main()
 
     robot_motion_init();
     esp_log_level_set("robot_motion", ESP_LOG_DEBUG);
+    esp_log_level_set("cliff_sensor", ESP_LOG_DEBUG);
 
     ESP_LOGI(TAG, "Display LVGL demo");
     bsp_display_backlight_on();
     ui_ctrl_init();
     app_network_start();
-
     
     ESP_LOGI(TAG, "speech recognition start");
     app_sr_start(false);
