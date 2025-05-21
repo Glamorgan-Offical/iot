@@ -1,0 +1,84 @@
+-- Found Git: C:/Users/Glamorgan/.espressif/tools/idf-git/2.39.2/cmd/git.exe (found version "2.39.2.windows.1")
+-- ccache will be used for faster recompilation
+-- The C compiler identification is GNU 12.2.0
+-- The CXX compiler identification is GNU 12.2.0
+-- The ASM compiler identification is GNU
+-- Found assembler: C:/Users/Glamorgan/.espressif/tools/xtensa-esp32s3-elf/esp-12.2.0_20230208/xtensa-esp32s3-elf/bin/xtensa-esp32s3-elf-gcc.exe
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: C:/Users/Glamorgan/.espressif/tools/xtensa-esp32s3-elf/esp-12.2.0_20230208/xtensa-esp32s3-elf/bin/xtensa-esp32s3-elf-gcc.exe - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: C:/Users/Glamorgan/.espressif/tools/xtensa-esp32s3-elf/esp-12.2.0_20230208/xtensa-esp32s3-elf/bin/xtensa-esp32s3-elf-g++.exe - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- git rev-parse returned 'fatal: not a git repository (or any of the parent directories): .git'
+-- Could not use 'git describe' to determine PROJECT_VER.
+-- Building ESP-IDF components for target esp32s3
+NOTICE: Processing 20 dependencies:
+NOTICE: [1/20] chmorgan/esp-audio-player (1.0.6)
+NOTICE: [2/20] chmorgan/esp-file-iterator (1.0.0)
+NOTICE: [3/20] chmorgan/esp-libhelix-mp3 (1.0.3)
+NOTICE: [4/20] espressif/button (3.5.0)
+NOTICE: [5/20] espressif/cmake_utilities (0.5.3)
+NOTICE: [6/20] espressif/esp-box (3.0.5)
+NOTICE: [7/20] espressif/esp-box-3 (1.1.3)
+NOTICE: [8/20] espressif/esp-box-lite (2.0.4)
+NOTICE: [9/20] espressif/esp-dsp (1.6.4)
+NOTICE: [10/20] espressif/esp-sr (1.4.2)
+NOTICE: [11/20] espressif/esp_codec_dev (1.1.0)
+NOTICE: [12/20] espressif/esp_lcd_ili9341 (1.2.0)
+NOTICE: [13/20] espressif/esp_lcd_touch (1.1.2)
+NOTICE: [14/20] espressif/esp_lcd_touch_gt911 (1.1.3)
+NOTICE: [15/20] espressif/esp_lcd_touch_tt21100 (1.1.1)
+NOTICE: [16/20] espressif/esp_lvgl_port (1.4.0)
+NOTICE: [17/20] espressif/icm42670 (1.0.0)
+NOTICE: [18/20] espressif/openai (1.0.2)
+NOTICE: [19/20] lvgl/lvgl (8.4.0)
+NOTICE: [20/20] idf (5.1.6)
+-- use sdkconfig
+-- PLATFORM ESP32_S3_BOX_3.
+-- Project sdkconfig file C:/Users/Glamorgan/myJava/com3505/LA2/sdkconfig
+Loading defaults file C:/Users/Glamorgan/myJava/com3505/LA2/sdkconfig.defaults...
+-- Looking for sys/types.h
+-- Looking for sys/types.h - found
+-- Looking for stdint.h
+-- Looking for stdint.h - found
+-- Looking for stddef.h
+-- Looking for stddef.h - found
+-- Check size of time_t
+-- Check size of time_t - done
+-- Found Python3: C:/Users/Glamorgan/.espressif/python_env/idf5.1_py3.11_env/Scripts/python.exe (found version "3.11.2") found components: Interpreter
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Failed
+-- Check if compiler accepts -pthread
+-- Check if compiler accepts -pthread - no
+-- Looking for pthread_create in pthreads
+-- Looking for pthread_create in pthreads - not found
+-- Looking for pthread_create in pthread
+-- Looking for pthread_create in pthread - not found
+-- Could NOT find Threads (missing: Threads_FOUND) 
+-- Performing Test C_COMPILER_SUPPORTS_WFORMAT_SIGNEDNESS
+-- Performing Test C_COMPILER_SUPPORTS_WFORMAT_SIGNEDNESS - Success
+-- App "chatgpt_demo" version: 1
+-- Adding linker script C:/Users/Glamorgan/myJava/com3505/LA2/build/esp-idf/esp_system/ld/memory.ld
+-- Adding linker script C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/esp_system/ld/esp32s3/sections.ld.in
+-- Adding linker script C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/esp_rom/esp32s3/ld/esp32s3.rom.ld
+-- Adding linker script C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/esp_rom/esp32s3/ld/esp32s3.rom.api.ld
+-- Adding linker script C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/esp_rom/esp32s3/ld/esp32s3.rom.bt_funcs.ld
+-- Adding linker script C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/esp_rom/esp32s3/ld/esp32s3.rom.libgcc.ld
+-- Adding linker script C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/esp_rom/esp32s3/ld/esp32s3.rom.newlib.ld
+-- Adding linker script C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/esp_rom/esp32s3/ld/esp32s3.rom.version.ld
+-- Adding linker script C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/soc/esp32s3/ld/esp32s3.peripherals.ld
+-- OPENAI: 1.0.2
+-- BUTTON: 3.5.0
+-- ESP_LCD_ILI9341: 1.2.0
+-- use sdkconfig
+-- PLATFORM ESP32_S3_BOX_3.
+-- Components: app_trace app_update bootloader bootloader_support bsp bt chmorgan__esp-audio-player chmorgan__esp-file-iterator chmorgan__esp-libhelix-mp3 cmock console cxx driver efuse esp-tls esp_adc esp_app_format esp_coex esp_common esp_eth esp_event esp_gdbstub esp_hid esp_http_client esp_http_server esp_https_ota esp_https_server esp_hw_support esp_lcd esp_local_ctrl esp_mm esp_netif esp_netif_stack esp_partition esp_phy esp_pm esp_psram esp_ringbuf esp_rom esp_system esp_timer esp_wifi espcoredump espressif__button espressif__cmake_utilities espressif__esp-box espressif__esp-box-3 espressif__esp-box-lite espressif__esp-dsp espressif__esp-sr espressif__esp_codec_dev espressif__esp_lcd_ili9341 espressif__esp_lcd_touch espressif__esp_lcd_touch_gt911 espressif__esp_lcd_touch_tt21100 espressif__esp_lvgl_port espressif__icm42670 espressif__openai esptool_py fatfs freertos hal heap http_parser idf_test ieee802154 json log lvgl__lvgl lwip main mbedtls mqtt newlib nvs_flash openthread partition_table perfmon protobuf-c protocomm pthread sdmmc soc spi_flash spiffs tcp_transport touch_element ulp unity usb vfs wear_levelling wifi_provisioning wpa_supplicant xtensa
+-- Component paths: C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/app_trace C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/app_update C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/bootloader C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/bootloader_support C:/Users/Glamorgan/myJava/com3505/LA2/components/bsp C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/bt C:/Users/Glamorgan/myJava/com3505/LA2/managed_components/chmorgan__esp-audio-player C:/Users/Glamorgan/myJava/com3505/LA2/managed_components/chmorgan__esp-file-iterator C:/Users/Glamorgan/myJava/com3505/LA2/managed_components/chmorgan__esp-libhelix-mp3 C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/cmock C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/console C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/cxx C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/driver C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/efuse C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/esp-tls C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/esp_adc C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/esp_app_format C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/esp_coex C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/esp_common C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/esp_eth C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/esp_event C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/esp_gdbstub C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/esp_hid C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/esp_http_client C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/esp_http_server C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/esp_https_ota C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/esp_https_server C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/esp_hw_support C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/esp_lcd C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/esp_local_ctrl C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/esp_mm C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/esp_netif C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/esp_netif_stack C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/esp_partition C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/esp_phy C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/esp_pm C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/esp_psram C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/esp_ringbuf C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/esp_rom C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/esp_system C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/esp_timer C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/esp_wifi C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/espcoredump C:/Users/Glamorgan/myJava/com3505/LA2/managed_components/espressif__button C:/Users/Glamorgan/myJava/com3505/LA2/managed_components/espressif__cmake_utilities C:/Users/Glamorgan/myJava/com3505/LA2/managed_components/espressif__esp-box C:/Users/Glamorgan/myJava/com3505/LA2/managed_components/espressif__esp-box-3 C:/Users/Glamorgan/myJava/com3505/LA2/managed_components/espressif__esp-box-lite C:/Users/Glamorgan/myJava/com3505/LA2/managed_components/espressif__esp-dsp C:/Users/Glamorgan/myJava/com3505/LA2/managed_components/espressif__esp-sr C:/Users/Glamorgan/myJava/com3505/LA2/managed_components/espressif__esp_codec_dev C:/Users/Glamorgan/myJava/com3505/LA2/managed_components/espressif__esp_lcd_ili9341 C:/Users/Glamorgan/myJava/com3505/LA2/managed_components/espressif__esp_lcd_touch C:/Users/Glamorgan/myJava/com3505/LA2/managed_components/espressif__esp_lcd_touch_gt911 C:/Users/Glamorgan/myJava/com3505/LA2/managed_components/espressif__esp_lcd_touch_tt21100 C:/Users/Glamorgan/myJava/com3505/LA2/managed_components/espressif__esp_lvgl_port C:/Users/Glamorgan/myJava/com3505/LA2/managed_components/espressif__icm42670 C:/Users/Glamorgan/myJava/com3505/LA2/managed_components/espressif__openai C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/esptool_py C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/fatfs C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/freertos C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/hal C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/heap C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/http_parser C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/idf_test C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/ieee802154 C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/json C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/log C:/Users/Glamorgan/myJava/com3505/LA2/managed_components/lvgl__lvgl C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/lwip C:/Users/Glamorgan/myJava/com3505/LA2/main C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/mbedtls C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/mqtt C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/newlib C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/nvs_flash C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/openthread C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/partition_table C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/perfmon C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/protobuf-c C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/protocomm C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/pthread C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/sdmmc C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/soc C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/spi_flash C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/spiffs C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/tcp_transport C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/touch_element C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/ulp C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/unity C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/usb C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/vfs C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/wear_levelling C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/wifi_provisioning C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/wpa_supplicant C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/xtensa
+-- Configuring done (58.3s)
+-- Generating done (1.7s)
+-- Build files have been written to: C:/Users/Glamorgan/myJava/com3505/LA2/build

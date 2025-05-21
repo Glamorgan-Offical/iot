@@ -1,0 +1,13 @@
+dependencies:
+  cmake_utilities: 0.*
+  idf:
+    version: '>=4.4.0'
+description: OpenAI library compatible with ESP-IDF
+documentation: https://docs.espressif.com/projects/esp-iot-solution/en/latest/ai/openai.html
+issues: https://github.com/espressif/esp-iot-solution/issues
+repository: git://github.com/espressif/esp-iot-solution.git
+repository_info:
+  commit_sha: 21d671b2fddcfb3f336d37a44d4530b050e79419
+  path: components/openai
+url: https://github.com/espressif/esp-iot-solution
+version: 1.0.2

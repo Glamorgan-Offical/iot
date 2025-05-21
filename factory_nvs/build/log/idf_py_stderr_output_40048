@@ -1,0 +1,8 @@
+Compiler supported targets: xtensa-esp32s3-elf
+
+TinyUSB path: C:/Users/Glamorgan/myJava/com3505/LA2/factory_nvs/managed_components/leeebo__tinyusb_src
+TinyUSB includes: C:/Users/Glamorgan/myJava/com3505/LA2/factory_nvs/managed_components/leeebo__tinyusb_src;C:/Users/Glamorgan/myJava/com3505/LA2/factory_nvs/managed_components/leeebo__tinyusb_src/src
+TinyUSB sources: C:/Users/Glamorgan/myJava/com3505/LA2/factory_nvs/managed_components/leeebo__tinyusb_src/src/tusb.c;C:/Users/Glamorgan/myJava/com3505/LA2/factory_nvs/managed_components/leeebo__tinyusb_src/src/common/tusb_fifo.c;C:/Users/Glamorgan/myJava/com3505/LA2/factory_nvs/managed_components/leeebo__tinyusb_src/src/device/usbd.c;C:/Users/Glamorgan/myJava/com3505/LA2/factory_nvs/managed_components/leeebo__tinyusb_src/src/device/usbd_control.c;C:/Users/Glamorgan/myJava/com3505/LA2/factory_nvs/managed_components/leeebo__tinyusb_src/src/portable/synopsys/dwc2/dcd_dwc2.c
+TinyUSB compile options: -Wno-format;-DCFG_TUSB_OS=OPT_OS_FREERTOS;-DCFG_TUSB_MCU=OPT_MCU_ESP32S3
+Project name: factory_nvs
+Project version: 1
