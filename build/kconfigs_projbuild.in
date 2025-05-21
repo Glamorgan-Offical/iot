@@ -1,8 +1,0 @@
-source "C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/bootloader/Kconfig.projbuild"
-source "C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/esp_app_format/Kconfig.projbuild"
-source "C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/esp_rom/Kconfig.projbuild"
-source "C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/esptool_py/Kconfig.projbuild"
-source "C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/partition_table/Kconfig.projbuild"
-source "C:/Users/Glamorgan/myJava/com3505/LA2/main/Kconfig.projbuild"
-source "C:/Users/Glamorgan/myJava/com3505/LA2/components/bsp/Kconfig.projbuild"
-source "C:/Users/Glamorgan/myJava/com3505/LA2/managed_components/espressif__esp-sr/Kconfig.projbuild"
