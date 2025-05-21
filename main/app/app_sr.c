@@ -177,6 +177,7 @@ static void audio_detect_task(void *arg)
                 detect_flag = false;
             }
         }
+        vTaskDelay(pdMS_TO_TICKS(1));
     }
     /* never return */
 }
