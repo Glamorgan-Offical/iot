@@ -1,4 +1,4 @@
-/* * Data converted from C:/Users/Glamorgan/myJava/com3505/LA2/factory_nvs/build/esp-idf/mbedtls/x509_crt_bundle
+/* * Data converted from D:/iot/factory_nvs/build/esp-idf/mbedtls/x509_crt_bundle
  */
 .data
 .section .rodata.embedded

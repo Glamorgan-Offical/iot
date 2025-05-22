@@ -1,4 +1,4 @@
-# Install script for directory: C:/Users/Glamorgan/esp/v5.1.6/esp-idf/components/newlib
+# Install script for directory: D:/v5.1.6/esp-idf/components/newlib
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -34,11 +34,11 @@ endif()
 
 # Set path to fallback-tool for dependency-resolution.
 if(NOT DEFINED CMAKE_OBJDUMP)
-  set(CMAKE_OBJDUMP "C:/Users/Glamorgan/.espressif/tools/xtensa-esp32s3-elf/esp-12.2.0_20230208/xtensa-esp32s3-elf/bin/xtensa-esp32s3-elf-objdump.exe")
+  set(CMAKE_OBJDUMP "D:/esp_idf_tools/tools/xtensa-esp32s3-elf/esp-12.2.0_20230208/xtensa-esp32s3-elf/bin/xtensa-esp32s3-elf-objdump.exe")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/Glamorgan/myJava/com3505/LA2/factory_nvs/build/esp-idf/newlib/port/cmake_install.cmake")
+  include("D:/iot/factory_nvs/build/esp-idf/newlib/port/cmake_install.cmake")
 endif()
 

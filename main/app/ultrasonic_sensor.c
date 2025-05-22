@@ -5,47 +5,35 @@
 #include "freertos/task.h"
 #include "esp_timer.h"
 #include <math.h>
-
+#include "esp_check.h" 
 static const char *TAG = "ultrasonic";
 
 #define ULTRASONIC_TIMEOUT_US 25000  // 25ms timeout (for up to ~4m range)
 #define SOUND_SPEED_ADJUST_FACTOR 0.0343 // Speed of sound in cm/us at 20°C
 
-static uint8_t trig_pin;
-static uint8_t echo_pin;
+static uint8_t s_trig_pin;
+static uint8_t s_echo_pin;
 
-esp_err_t ultrasonic_init(uint8_t trigger_pin, uint8_t echo_pin)
+esp_err_t ultrasonic_init(uint8_t trigger_gpio, uint8_t echo_gpio)
 {
-    trig_pin = trigger_pin;
-    echo_pin = echo_pin;
-    
-    // Configure trigger pin as output
-    gpio_config_t io_conf = {
-        .pin_bit_mask = (1ULL << trig_pin),
-        .mode = GPIO_MODE_OUTPUT,
-        .pull_up_en = GPIO_PULLUP_DISABLE,
-        .pull_down_en = GPIO_PULLDOWN_DISABLE,
-        .intr_type = GPIO_INTR_DISABLE
-    };
-    esp_err_t ret = gpio_config(&io_conf);
-    if (ret != ESP_OK) {
-        ESP_LOGE(TAG, "Error configuring trigger pin");
-        return ret;
-    }
-    
-    // Configure echo pin as input
-    io_conf.pin_bit_mask = (1ULL << echo_pin);
-    io_conf.mode = GPIO_MODE_INPUT;
-    ret = gpio_config(&io_conf);
-    if (ret != ESP_OK) {
-        ESP_LOGE(TAG, "Error configuring echo pin");
-        return ret;
-    }
-    
-    // Set trigger pin low initially
-    gpio_set_level(trig_pin, 0);
-    
-    ESP_LOGI(TAG, "Ultrasonic sensor initialized on trigger=%d, echo=%d", trig_pin, echo_pin);
+    s_trig_pin = trigger_gpio;
+    s_echo_pin = echo_gpio;
+
+    /************ Trig：推挽输出，禁止上下拉 ************/
+    gpio_config_t io_conf = {0};
+    io_conf.pin_bit_mask  = BIT64(s_trig_pin);     
+    io_conf.mode          = GPIO_MODE_OUTPUT;
+    ESP_RETURN_ON_ERROR(gpio_config(&io_conf), TAG, "Trig pin cfg failed");
+    gpio_set_level(s_trig_pin, 0);
+
+    /************ Echo：输入，下拉使能 ************/
+    io_conf.pin_bit_mask  = BIT64(s_echo_pin);
+    io_conf.mode          = GPIO_MODE_INPUT;
+    io_conf.pull_down_en  = GPIO_PULLDOWN_ENABLE;
+    io_conf.pull_up_en    = GPIO_PULLUP_DISABLE;
+    ESP_RETURN_ON_ERROR(gpio_config(&io_conf), TAG, "Echo pin cfg failed");
+
+    ESP_LOGI(TAG, "Ultrasonic init OK  (Trig=%d  Echo=%d)", s_trig_pin, s_echo_pin);
     return ESP_OK;
 }
 
@@ -55,46 +43,45 @@ esp_err_t ultrasonic_measure(float *distance_cm)
         return ESP_ERR_INVALID_ARG;
     }
 
-    int64_t echo_start, echo_end, echo_duration;
+    // 检查初始状态
+    if (gpio_get_level(s_echo_pin) != 0) {
+        ESP_LOGW(TAG, "Echo pin not at low level initially, check hardware");
+        return ESP_ERR_INVALID_STATE;
+    }
+
+    int64_t echo_start, echo_end;
     int64_t timeout_time;
 
-    // 发送 10μs 触发脉冲
-    gpio_set_level(trig_pin, 0);
+    // 发送触发脉冲
+    gpio_set_level(s_trig_pin, 0);
     esp_rom_delay_us(2);
-    gpio_set_level(trig_pin, 1);
+    gpio_set_level(s_trig_pin, 1);
     esp_rom_delay_us(10);
-    gpio_set_level(trig_pin, 0);
+    gpio_set_level(s_trig_pin, 0);
 
-    // 等待回波上升沿（带超时）
+    // 等待回波上升沿 - 移除LOG避免影响时序
     timeout_time = esp_timer_get_time() + ULTRASONIC_TIMEOUT_US;
-    while (gpio_get_level(echo_pin) == 0) {
+    while (gpio_get_level(s_echo_pin) == 0) {
         if (esp_timer_get_time() > timeout_time) {
-            ESP_LOGW(TAG, "Echo rising edge timeout");
-            *distance_cm = 0;
             return ESP_ERR_TIMEOUT;
         }
-        taskYIELD();  // 让出调度，切换到 Wi-Fi、LVGL 等高优先级任务
     }
     echo_start = esp_timer_get_time();
 
-    // 等待回波下降沿（带超时）
+    // 等待回波下降沿
     timeout_time = echo_start + ULTRASONIC_TIMEOUT_US;
-    while (gpio_get_level(echo_pin) == 1) {
+    while (gpio_get_level(s_echo_pin) == 1) {
         if (esp_timer_get_time() > timeout_time) {
-            ESP_LOGW(TAG, "Echo falling edge timeout");
-            *distance_cm = 0;
             return ESP_ERR_TIMEOUT;
         }
-        taskYIELD();  // 持续让出，避免长时间占用 CPU
     }
     echo_end = esp_timer_get_time();
 
-    // 计算距离：声波往返时间 × 声速（cm/μs）除以 2
-    echo_duration = echo_end - echo_start;
+    // 计算距离
+    int64_t echo_duration = echo_end - echo_start;
     *distance_cm = (echo_duration * SOUND_SPEED_ADJUST_FACTOR) / 2.0;
 
-    ESP_LOGD(TAG, "Distance: %.2f cm (pulse: %lld μs)",
-             *distance_cm, echo_duration);
+    ESP_LOGD(TAG, "Distance: %.2f cm (pulse: %lld μs)", *distance_cm, echo_duration);
     return ESP_OK;
 }
 
@@ -105,7 +92,7 @@ bool ultrasonic_obstacle_detected(float threshold_cm)
     esp_err_t ret = ultrasonic_measure(&distance);
     
     if (ret != ESP_OK) {
-        ESP_LOGW(TAG, "Failed to measure distance: %s", esp_err_to_name(ret));
+        // ESP_LOGW(TAG, "Failed to measure distance: %s", esp_err_to_name(ret));
         return false; // Assume no obstacle on error
     }
     
