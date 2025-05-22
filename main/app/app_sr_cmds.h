@@ -16,6 +16,7 @@ typedef enum {
     SR_CMD_TURN_RIGHT,
     SR_CMD_SPIN_AROUND,
     SR_CMD_STOP,
+    SR_CMD_REPORT_TEMPHUMI, 
 } sr_robot_cmd_t;
 
 typedef struct sr_cmd {
@@ -29,7 +30,7 @@ typedef struct sr_cmd {
     const char** next_cmds;  // 注意这里使用指针
 } sr_cmd_t;
 // 声明外部命令数组——数组大小在编译期可知
-#define ROBOT_CMDS_EN_COUNT  6
+#define ROBOT_CMDS_EN_COUNT  7
 extern const sr_cmd_t g_robot_cmds_en[ROBOT_CMDS_EN_COUNT];
 
 #endif // _APP_SR_CMDS_H_

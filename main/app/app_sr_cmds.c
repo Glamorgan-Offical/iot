@@ -23,4 +23,7 @@ const sr_cmd_t g_robot_cmds_en[] = {
       "spin around",   "S P IH N ER AW N D",     no_next_cmds },
     { {NULL}, 0, SR_CMD_STOP,          SR_LANG_EN, 0,
     "stop",           "S T AA P",             no_next_cmds },
+
+    { {NULL},0, SR_CMD_REPORT_TEMPHUMI, SR_LANG_EN, 0,
+      "environment report", "EH N V AY R AH N M AH N T R IH P AO R T", no_next_cmds },
 };

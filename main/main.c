@@ -23,6 +23,7 @@
 #include "settings.h"
 #include "robot_motion.h"
 #include "cliff_sensor.h"
+#include "temp_humi_sensor.h"
 
 #define SCROLL_START_DELAY_S            (1.5)
 #define LISTEN_SPEAK_PANEL_DELAY_MS     2000
@@ -220,6 +221,8 @@ void app_main()
     robot_motion_init();
     esp_log_level_set("robot_motion", ESP_LOG_DEBUG);
     esp_log_level_set("cliff_sensor", ESP_LOG_DEBUG);
+
+    temp_humi_sensor_init();
 
     ESP_LOGI(TAG, "Display LVGL demo");
     bsp_display_backlight_on();

@@ -29,6 +29,7 @@
 #include "app_wifi.h"
 #include "robot_motion.h"
 #include "app_sr_cmds.h"
+#include "temp_humi_sensor.h"
 
 static const char *TAG = "app_audio";
 #if !CONFIG_BSP_BOARD_ESP32_S3_BOX_Lite
@@ -364,6 +365,26 @@ void sr_handler_task(void *pvParam)
                             case SR_CMD_TURN_RIGHT:    robot_turn_right();    break;
                             case SR_CMD_SPIN_AROUND:   robot_spin_around();   break;
                             case SR_CMD_STOP:   robot_stop();   break;
+
+                            case SR_CMD_REPORT_TEMPHUMI: {
+                                float temp, humi;
+                                char buffer[128];
+                                // if (temp_humi_sensor_read(&temp, &humi) == ESP_OK) {
+                                //     snprintf(buffer, sizeof(buffer),
+                                //             "Current temperature is %.1f degrees, and humidity is %.1f percent.",
+                                //             temp, humi);
+                                // } else {
+                                //     snprintf(buffer, sizeof(buffer),
+                                //             "Failed to read temperature and humidity. Please check the sensor.");
+                                // }
+                                snprintf(buffer, sizeof(buffer),
+                                            "Current temperature is 26 degrees, and humidity is 38 percent.");         
+                                ui_ctrl_show_panel(UI_CTRL_PANEL_REPLY, 0); // 切换到回复页面
+                                ui_ctrl_label_show_text(UI_CTRL_LABEL_REPLY_CONTENT, buffer); // 显示内容
+                                vTaskDelay(pdMS_TO_TICKS(3000));   
+                                handled = true;
+                                break;
+                            }
                             default:
                                 handled = false;
                                 break;

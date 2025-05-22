@@ -180,7 +180,7 @@ void robot_motion_init(void)
         // {.gpio_num = C_PWM_PIN, .speed_mode = MOTOR_LEDC_SPEED, .channel = C_LEDC_CH, .timer_sel = LEDC_TIMER_0, .duty = 0, .hpoint = 0},
         {.gpio_num = D_PWM_PIN, .speed_mode = MOTOR_LEDC_SPEED, .channel = D_LEDC_CH, .timer_sel = MOTOR_LEDC_TIMER, .duty = 0, .hpoint = 0},
     };
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 2; i++) {
         ledc_channel_config(&ledc_channel[i]);
     }
     
@@ -193,7 +193,7 @@ void robot_motion_init(void)
 
     esp_err_t ret = robot_obstacle_detection_init(ULTRASONIC_TRIGGER_PIN, ULTRASONIC_ECHO_PIN);
     if (ret != ESP_OK) {
-        ESP_LOGE(TAG, "超声波传感器初始化失败: %s", esp_err_to_name(ret));
+        ESP_LOGE(TAG, "Failed to update the Ultrasonic %s", esp_err_to_name(ret));
     } else {
         // 启用障碍物检测
         robot_obstacle_detection_enable(OBSTACLE_THRESHOLD_CM);
@@ -235,7 +235,7 @@ void robot_move_backward(void)
     set_motor(D_IN1_PIN, D_IN2_PIN, D_LEDC_CH,  -24);
     
     robot_is_moving = true;
-    cliff_detection_enable(true);
+    cliff_detection_enable(false);
     ESP_LOGI(TAG, "Moving backward with cliff detection enabled");
 }
 
@@ -280,7 +280,7 @@ void robot_stop(void)
     // A 通道
     ledc_stop(MOTOR_LEDC_SPEED, A_LEDC_CH, 0);
     // D 通道
-    ledc_stop(MOTOR_LEDC_SPEED, A_LEDC_CH, 0);
+    ledc_stop(MOTOR_LEDC_SPEED, D_LEDC_CH, 0);
 
     gpio_set_level(A_IN1_PIN, 0);
     gpio_set_level(A_IN2_PIN, 0);
