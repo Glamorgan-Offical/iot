@@ -29,12 +29,12 @@
 #include "app_audio.h"
 #include "app_wifi.h"
 #include "app_sr.h"
-#include "esp_mn_iface.h"       // esp_mn_get_iface_from_name
+#include "esp_mn_iface.h"       
 #include "app_sr_cmds.h" 
 #include "robot_motion.h"
 static const char *TAG = "app_sr";
 
-static int mn_chunk = 0;   // 加在文件顶部或静态变量区
+static int mn_chunk = 0;  
 static esp_afe_sr_iface_t *afe_handle = NULL;
 static srmodel_list_t *models = NULL;
 static bool manul_detect_flag = false;
@@ -94,7 +94,7 @@ static void audio_detect_task(void *arg)
 
     esp_afe_sr_data_t *afe_data = arg;
 
-    /* 第一次进来时，记录 multinet 每帧样本数 */
+    /* First time, record the number of samples per frame for multinet */
     if (mn_chunk == 0 && g_sr_data->multinet) {
         mn_chunk = g_sr_data->multinet->get_samp_chunksize(g_sr_data->model_data);
         ESP_LOGI(TAG, "MultiNet chunk = %d samples", mn_chunk);
@@ -115,7 +115,7 @@ static void audio_detect_task(void *arg)
             continue;
         }
 
-        /* ---------- 1. 唤醒词 ---------- */
+        /* ---------- 1. Wake Word ---------- */
         if (res->wakeup_state == WAKENET_DETECTED) {
             sr_result_t wk = {
                 .wakenet_mode = WAKENET_DETECTED,
@@ -124,17 +124,17 @@ static void audio_detect_task(void *arg)
             xQueueSend(g_sr_data->result_que, &wk, 0);
         } else if (res->wakeup_state == WAKENET_CHANNEL_VERIFIED && !detect_flag) {
             detect_flag = true;
-            g_sr_data->afe_handle->disable_wakenet(afe_data);   // 关唤醒
+            g_sr_data->afe_handle->disable_wakenet(afe_data);   // Disable wake word detection
             frame_keep = 0;
             ESP_LOGI(TAG, "Channel verified, ch=%d", res->trigger_channel_id);
         }
 
-        /* ---------- 2. 指令检测 ---------- */
+        /* ---------- 2. Command Detection ---------- */
         if (!detect_flag) {
-            continue;   // 还没进入检测阶段
+            continue;   
         }
 
-        /* 2-1 监控 VAD：100 帧静音 → 超时 */
+        /* 2-1 Monitor VAD: 100 frames of silence → timeout */
         if (local_state != res->vad_state) {
             local_state = res->vad_state;
             frame_keep  = 0;
@@ -153,15 +153,15 @@ static void audio_detect_task(void *arg)
             continue;
         }
 
-        /* 2-2 把 AFE 输出帧送给 multinet->detect() */
-        if (res->data && res->data_size >= mn_chunk * 2) {      // 一帧 16-bit ⇒ ×2
+        /* 2-2 Feed AFE output frame to multinet->detect() */
+        if (res->data && res->data_size >= mn_chunk * 2) {      // One frame 16-bit ⇒ ×2
             g_sr_data->multinet->detect(g_sr_data->model_data, res->data);
 
             esp_mn_results_t *mn_res = g_sr_data->multinet->get_results(g_sr_data->model_data);
             if (mn_res && mn_res->state == ESP_MN_STATE_DETECTED && mn_res->num > 0) {
 
-                int cmd_id   = mn_res->command_id[0];          // 最优结果
-                int cmd_prob = (int)(mn_res->prob[0] * 100);   // (0-1)→百分数
+                int cmd_id   = mn_res->command_id[0];          // Best result
+                int cmd_prob = (int)(mn_res->prob[0] * 100);   // (0-1)→percentage
                 ESP_LOGI(TAG, "[MN] id=%d  prob=%d", cmd_id, cmd_prob);
 
                 sr_result_t ok = {
@@ -171,7 +171,7 @@ static void audio_detect_task(void *arg)
                 };
                 xQueueSend(g_sr_data->result_que, &ok, 0);
 
-                /* 收到指令 → 复位并回到唤醒态 */
+                /* Command received → Reset and return to wake word state */
                 g_sr_data->afe_handle->enable_wakenet(afe_data);
                 g_sr_data->multinet->clean(g_sr_data->model_data);
                 detect_flag = false;
@@ -191,7 +191,7 @@ esp_err_t app_sr_set_language(sr_language_t new_lang)
         ESP_LOGW(TAG, "language unchanged");
         return ESP_OK;
     }
-    /* ---------- 1. 清理旧模型 & 命令 ---------- */
+    /* ---------- 1. Clean old model & commands ---------- */
     ESP_ERROR_CHECK(app_sr_remove_all_cmd());
     if (strstr(g_sr_data->mn_name ?: "", "mn6")) {
                 esp_mn_commands_clear();
@@ -199,17 +199,17 @@ esp_err_t app_sr_set_language(sr_language_t new_lang)
 
     g_sr_data->cmd_num = 49;
 
-    free(g_sr_data->mn_name);          // 释放上一轮 strdup 的名字
+    free(g_sr_data->mn_name);         
 
     g_sr_data->lang = new_lang;
     ESP_LOGI(TAG, "Set language → %s", new_lang == SR_LANG_EN ? "EN" : "CN");
 
-    /* ---------- 2. 切 Wakenet ---------- */
+    /* ---------- 2. Cut Wakenet ---------- */
     char *wn_name = esp_srmodel_filter(models, ESP_WN_PREFIX, "");
     ESP_LOGI(TAG, "load wakenet:%s", wn_name);
     g_sr_data->afe_handle->set_wakenet(g_sr_data->afe_data, wn_name);
 
-    /* ---------- 3. 创建 Multinet (v1.4.4 API) ---------- */
+    /* ---------- 3. Create Multinet (v1.4.4 API) ---------- */
     char *mn_name = esp_srmodel_filter(models, ESP_MN_PREFIX,
                               new_lang == SR_LANG_EN ? ESP_MN_ENGLISH : ESP_MN_CHINESE);
     ESP_RETURN_ON_FALSE(mn_name, ESP_ERR_NOT_FOUND, TAG, "no multinet");
@@ -217,33 +217,32 @@ esp_err_t app_sr_set_language(sr_language_t new_lang)
     esp_mn_iface_t *mn_iface = esp_mn_handle_from_name(mn_name);
     ESP_RETURN_ON_FALSE(mn_iface, ESP_ERR_NOT_FOUND, TAG, "iface null");
 
-    /* 第二个参数是内部环形缓冲区尺寸（字节）。官方 sample 用 5760，能跑 16 kHz，80-ms。*/
     model_iface_data_t *model_data = mn_iface->create(mn_name, 5760);
     ESP_RETURN_ON_FALSE(model_data, ESP_FAIL, TAG, "create mn fail");
 
     g_sr_data->multinet  = mn_iface;
     g_sr_data->model_data = model_data;
-    g_sr_data->mn_name    = strdup(mn_name);   // 留给 strstr()
+    g_sr_data->mn_name    = strdup(mn_name);   // Leave for strstr()
 
     ESP_LOGI(TAG, "load multinet: %s", mn_name);
 
-    /* ---------- 4. 重新注册命令 ---------- */
-    const sr_cmd_t *cmd_table;          // 这里只示例英文
+    /* ---------- 4. Re-register commands ---------- */
+    const sr_cmd_t *cmd_table;          
     size_t          cmd_cnt;
 
     if (new_lang == SR_LANG_EN) {
-               cmd_table = g_robot_cmds_en;          /* 只含 5 条 */
-               cmd_cnt   = ROBOT_CMDS_EN_COUNT;      /* =5 */
+               cmd_table = g_robot_cmds_en;          
+               cmd_cnt   = ROBOT_CMDS_EN_COUNT;      
     
     }
 
     for (size_t i = 0; i < cmd_cnt; i++) {
-                ESP_ERROR_CHECK(app_sr_add_cmd(&cmd_table[i]));     /* cmd_num++ 内部自增 */
+                ESP_ERROR_CHECK(app_sr_add_cmd(&cmd_table[i]));     
     }
     ESP_ERROR_CHECK(app_sr_update_cmds());
 
-    /* ---------- 5. 更新到 Multinet ---------- */
-    return app_sr_update_cmds();      // 里面会做 esp_mn_commands_update()
+    /* ---------- 5. Update to Multinet ---------- */
+    return app_sr_update_cmds();      
     return ESP_OK;
 }
 
@@ -402,12 +401,6 @@ esp_err_t app_sr_add_cmd(const sr_cmd_t *cmd)
 esp_err_t app_sr_update_cmds(void)
 {
     ESP_RETURN_ON_FALSE(NULL != g_sr_data, ESP_ERR_INVALID_STATE, TAG, "SR is not running");
-
-    // uint32_t count = 0;
-    // sr_cmd_t *it;
-    // SLIST_FOREACH(it, &g_sr_data->cmd_list, next) {
-    //     it->id = count++;
-    // }
 
     esp_mn_error_t *err_id = esp_mn_commands_update(g_sr_data->multinet, g_sr_data->model_data);
     if (err_id) {

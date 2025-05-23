@@ -359,28 +359,44 @@ void sr_handler_task(void *pvParam)
                         }
                         bool handled = true;  
                         switch (item ? item->cmd_id : -1) {
-                            case SR_CMD_MOVE_FORWARD:  robot_move_forward();  break;
-                            case SR_CMD_MOVE_BACKWARD: robot_move_backward(); break;
-                            case SR_CMD_TURN_LEFT:     robot_turn_left();     break;
-                            case SR_CMD_TURN_RIGHT:    robot_turn_right();    break;
-                            case SR_CMD_SPIN_AROUND:   robot_spin_around();   break;
+                            case SR_CMD_MOVE_FORWARD:  
+                                robot_move_forward_timed(1800);  
+                                break;
+                            case SR_CMD_MOVE_BACKWARD: 
+                                robot_move_backward_timed(1800); 
+                                break;
+                            case SR_CMD_TURN_LEFT:     
+                                // Use timed left turn, approximately 1 second for 90 degrees
+                                robot_turn_left_timed(1300);     
+                                break;
+                            case SR_CMD_TURN_RIGHT:    
+                                // Use timed right turn, approximately 1 second for 90 degrees 
+                                robot_turn_right_timed(1300);    
+                                break;
+                            case SR_CMD_SPIN_AROUND:   
+                                // Use timed spin, approximately 2 seconds for a full rotation
+                                robot_spin_around_timed(2600);   
+                                break;
                             case SR_CMD_STOP:   robot_stop();   break;
+                            case SR_CMD_WALK_AROUND:   
+                                // Start autonomous walking mode, stopping is done through robot_stop
+                                robot_start_walk_around();
+                                ESP_LOGI(TAG, "Walk around mode started");
+                                break;
 
                             case SR_CMD_REPORT_TEMPHUMI: {
                                 float temp, humi;
                                 char buffer[128];
-                                // if (temp_humi_sensor_read(&temp, &humi) == ESP_OK) {
-                                //     snprintf(buffer, sizeof(buffer),
-                                //             "Current temperature is %.1f degrees, and humidity is %.1f percent.",
-                                //             temp, humi);
-                                // } else {
-                                //     snprintf(buffer, sizeof(buffer),
-                                //             "Failed to read temperature and humidity. Please check the sensor.");
-                                // }
-                                snprintf(buffer, sizeof(buffer),
-                                            "Current temperature is 26 degrees, and humidity is 38 percent.");         
-                                ui_ctrl_show_panel(UI_CTRL_PANEL_REPLY, 0); // 切换到回复页面
-                                ui_ctrl_label_show_text(UI_CTRL_LABEL_REPLY_CONTENT, buffer); // 显示内容
+                                if (temp_humi_sensor_read(&temp, &humi) == ESP_OK) {
+                                    snprintf(buffer, sizeof(buffer),
+                                            "Current temperature is %.1f degrees, and humidity is %.1f percent.",
+                                            temp, humi);
+                                } else {
+                                    snprintf(buffer, sizeof(buffer),
+                                            "Failed to read temperature and humidity. Please check the sensor.");
+                                }    
+                                ui_ctrl_show_panel(UI_CTRL_PANEL_REPLY, 0); // Switch to reply page
+                                ui_ctrl_label_show_text(UI_CTRL_LABEL_REPLY_CONTENT, buffer); // Display content
                                 vTaskDelay(pdMS_TO_TICKS(3000));   
                                 handled = true;
                                 break;
@@ -389,18 +405,16 @@ void sr_handler_task(void *pvParam)
                                 handled = false;
                                 break;
                         }
-                // 重新启用唤醒词检测
-                audio_record_stop();                         // ① 关录音 & 复位 record_flag
-                ui_ctrl_show_panel(UI_CTRL_PANEL_SLEEP, 300);// ② 300 ms 后自动回到 Sleep
+                // Re-enable wake word detection
+                audio_record_stop();                         // ① Stop recording & reset record_flag
+                ui_ctrl_show_panel(UI_CTRL_PANEL_SLEEP, 300);// ② Auto return to Sleep after 300 ms
                 g_sr_data->afe_handle->enable_wakenet(
-                        g_sr_data->afe_data);                // ③ 再次启用唤醒
+                        g_sr_data->afe_data);                // ③ Re-enable wake word detection
             
-                if (!handled) {  // 非运动指令才走 GPT
+                if (!handled) {  // Use GPT for non-motion commands
                     start_openai((uint8_t *)record_audio_buffer,
                                  record_total_len);
                 }
             }
-            
-        // vTaskDelete(NULL);
     }
 }

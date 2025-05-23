@@ -19,14 +19,14 @@ esp_err_t ultrasonic_init(uint8_t trigger_gpio, uint8_t echo_gpio)
     s_trig_pin = trigger_gpio;
     s_echo_pin = echo_gpio;
 
-    /************ Trig：推挽输出，禁止上下拉 ************/
+    /************ Trig: Push-pull output, disable pull-up/down ************/
     gpio_config_t io_conf = {0};
     io_conf.pin_bit_mask  = BIT64(s_trig_pin);     
     io_conf.mode          = GPIO_MODE_OUTPUT;
     ESP_RETURN_ON_ERROR(gpio_config(&io_conf), TAG, "Trig pin cfg failed");
     gpio_set_level(s_trig_pin, 0);
 
-    /************ Echo：输入，下拉使能 ************/
+    /************ Echo: Input, pull-down enabled ************/
     io_conf.pin_bit_mask  = BIT64(s_echo_pin);
     io_conf.mode          = GPIO_MODE_INPUT;
     io_conf.pull_down_en  = GPIO_PULLDOWN_ENABLE;
@@ -43,7 +43,6 @@ esp_err_t ultrasonic_measure(float *distance_cm)
         return ESP_ERR_INVALID_ARG;
     }
 
-    // 检查初始状态
     if (gpio_get_level(s_echo_pin) != 0) {
         ESP_LOGW(TAG, "Echo pin not at low level initially, check hardware");
         return ESP_ERR_INVALID_STATE;
@@ -52,14 +51,12 @@ esp_err_t ultrasonic_measure(float *distance_cm)
     int64_t echo_start, echo_end;
     int64_t timeout_time;
 
-    // 发送触发脉冲
     gpio_set_level(s_trig_pin, 0);
     esp_rom_delay_us(2);
     gpio_set_level(s_trig_pin, 1);
     esp_rom_delay_us(10);
     gpio_set_level(s_trig_pin, 0);
 
-    // 等待回波上升沿 - 移除LOG避免影响时序
     timeout_time = esp_timer_get_time() + ULTRASONIC_TIMEOUT_US;
     while (gpio_get_level(s_echo_pin) == 0) {
         if (esp_timer_get_time() > timeout_time) {
@@ -68,7 +65,6 @@ esp_err_t ultrasonic_measure(float *distance_cm)
     }
     echo_start = esp_timer_get_time();
 
-    // 等待回波下降沿
     timeout_time = echo_start + ULTRASONIC_TIMEOUT_US;
     while (gpio_get_level(s_echo_pin) == 1) {
         if (esp_timer_get_time() > timeout_time) {
@@ -77,7 +73,6 @@ esp_err_t ultrasonic_measure(float *distance_cm)
     }
     echo_end = esp_timer_get_time();
 
-    // 计算距离
     int64_t echo_duration = echo_end - echo_start;
     *distance_cm = (echo_duration * SOUND_SPEED_ADJUST_FACTOR) / 2.0;
 
@@ -92,8 +87,7 @@ bool ultrasonic_obstacle_detected(float threshold_cm)
     esp_err_t ret = ultrasonic_measure(&distance);
     
     if (ret != ESP_OK) {
-        // ESP_LOGW(TAG, "Failed to measure distance: %s", esp_err_to_name(ret));
-        return false; // Assume no obstacle on error
+        return false; 
     }
     
     // Check if distance is within threshold

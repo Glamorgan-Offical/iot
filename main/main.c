@@ -222,7 +222,7 @@ void app_main()
     esp_log_level_set("robot_motion", ESP_LOG_DEBUG);
     esp_log_level_set("cliff_sensor", ESP_LOG_DEBUG);
 
-    temp_humi_sensor_init();
+    // temp_humi_sensor_init();
 
     ESP_LOGI(TAG, "Display LVGL demo");
     bsp_display_backlight_on();

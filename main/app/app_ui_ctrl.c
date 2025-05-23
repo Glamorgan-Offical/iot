@@ -112,6 +112,14 @@ static void show_panel_timer_handler(struct _lv_timer_t *t)
         lv_obj_add_flag(ui_ImageListenSettings, LV_OBJ_FLAG_HIDDEN);
         lv_obj_add_flag(ui_LabelListenSpeak, LV_OBJ_FLAG_HIDDEN);
         break;
+    case UI_CTRL_PANEL_MOVING:
+        show_panel = ui_PanelListen;
+        hide_panel[0] = ui_PanelSleep;
+        hide_panel[1] = ui_PanelGet;
+        hide_panel[2] = ui_PanelReply;
+        lv_obj_clear_flag(ui_LabelListenSpeak, LV_OBJ_FLAG_HIDDEN);
+        lv_label_set_text(ui_LabelListenSpeak, "Moving ...");
+        break;
     default:
         break;
     }
@@ -236,7 +244,6 @@ void ui_sleep_show_animation(void)
     lv_anim_set_values(&PropertyAnimation_0, 0, 255 );
     lv_anim_set_path_cb( &PropertyAnimation_0, lv_anim_path_linear);
     lv_anim_set_delay( &PropertyAnimation_0, 0 );
-    // lv_anim_set_deleted_cb( &PropertyAnimation_0, _ui_anim_callback_free_user_data );
     lv_anim_set_playback_time(&PropertyAnimation_0, 1000);
     lv_anim_set_playback_delay(&PropertyAnimation_0, 0);
     lv_anim_set_repeat_count(&PropertyAnimation_0, LV_ANIM_REPEAT_INFINITE );
@@ -256,7 +263,6 @@ void ui_sleep_show_animation(void)
     lv_anim_set_values(&PropertyAnimation_1, 0, 255 );
     lv_anim_set_path_cb( &PropertyAnimation_1, lv_anim_path_linear);
     lv_anim_set_delay( &PropertyAnimation_1, 1000 );
-    // lv_anim_set_deleted_cb( &PropertyAnimation_1, _ui_anim_callback_free_user_data );
     lv_anim_set_playback_time(&PropertyAnimation_1, 1000);
     lv_anim_set_playback_delay(&PropertyAnimation_1, 0);
     lv_anim_set_repeat_count(&PropertyAnimation_1, LV_ANIM_REPEAT_INFINITE );
@@ -291,7 +297,6 @@ static void reply_content_scroll_timer_handler()
     if (reply_content_get && reply_audio_start) {
         font = lv_obj_get_style_text_font(ui_LabelReplyContent, 0);
         offset = lv_obj_get_scroll_y(ui_ContainerReplyContent);
-        // ESP_LOGI(TAG, "offset: %d, content_height: %d, font_height: %d", offset, content_height, font->line_height);
         if ((content_height > lv_obj_get_height(ui_ContainerReplyContent)) &&
                 (offset < (content_height - lv_obj_get_height(ui_ContainerReplyContent)))) {
             offset += font->line_height / 2;

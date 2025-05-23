@@ -3,7 +3,6 @@
 #include "app_sr.h"
 #include "app_sr_cmds.h"
 
-// 如果不需要后续命令，就将next_cmds设为NULL
 static const char* no_next_cmds[] = { NULL };
 
 const sr_cmd_t g_robot_cmds_en[] = {
@@ -23,7 +22,8 @@ const sr_cmd_t g_robot_cmds_en[] = {
       "spin around",   "S P IH N ER AW N D",     no_next_cmds },
     { {NULL}, 0, SR_CMD_STOP,          SR_LANG_EN, 0,
     "stop",           "S T AA P",             no_next_cmds },
-
     { {NULL},0, SR_CMD_REPORT_TEMPHUMI, SR_LANG_EN, 0,
       "environment report", "EH N V AY R AH N M AH N T R IH P AO R T", no_next_cmds },
+    { {NULL},0, SR_CMD_WALK_AROUND,    SR_LANG_EN, 0,
+      "walk around",    "W AO K ER AW N D",     no_next_cmds },
 };
